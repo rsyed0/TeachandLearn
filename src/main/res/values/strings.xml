@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Teach and Learn</string>
+    <string name="signed_in_fmt">Signed</string>
+    <string name="loading">Loading</string>
+    <string name="signed_out">Signed Out</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="tutor">Tutor</string>
+</resources>

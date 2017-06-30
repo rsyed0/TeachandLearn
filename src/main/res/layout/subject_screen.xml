@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Subjects"
+        android:textSize="30sp"
+        android:textAlignment="center"
+        android:layout_marginTop="43dp"
+        android:layout_marginLeft="34dp"
+        android:layout_marginStart="34dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <CheckedTextView
+        android:id="@+id/math"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/textView"
+        android:layout_alignStart="@+id/textView"
+        android:layout_below="@+id/textView"
+        android:layout_marginLeft="31dp"
+        android:layout_marginStart="31dp"
+        android:layout_marginTop="22dp"
+        android:text="Math"
+        android:textSize="20dp" />
+
+    <RadioButton
+        android:id="@+id/science"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/math"
+        android:layout_alignStart="@+id/math"
+        android:layout_below="@+id/math"
+        android:layout_marginTop="13dp"
+        android:text="Science"
+        android:textSize="20dp" />
+
+    <RadioButton
+        android:id="@+id/social_studies"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/science"
+        android:layout_alignStart="@+id/science"
+        android:layout_below="@+id/science"
+        android:layout_marginTop="15dp"
+        android:text="Social Studies"
+        android:textSize="20dp" />
+
+    <RadioButton
+        android:id="@+id/english"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="English"
+        android:textSize="20sp"
+        android:layout_below="@+id/social_studies"
+        android:layout_alignLeft="@+id/social_studies"
+        android:layout_alignStart="@+id/social_studies" />
+
+    <RadioButton
+        android:id="@+id/spanish"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="11dp"
+        android:text="Spanish"
+        android:textSize="20sp"
+        android:layout_below="@+id/english"
+        android:layout_alignLeft="@+id/english"
+        android:layout_alignStart="@+id/english" />
+
+    <RadioButton
+        android:id="@+id/french"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="19dp"
+        android:text="French"
+        android:textSize="20sp"
+        android:layout_below="@+id/spanish"
+        android:layout_alignLeft="@+id/spanish"
+        android:layout_alignStart="@+id/spanish" />
+
+    <Button
+        android:id="@+id/submit2"
+        android:onClick="submitSubject"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="29dp"
+        android:text="Submit"
+        android:textSize="20sp"
+        android:layout_centerHorizontal="true" />
+
+</RelativeLayout>
