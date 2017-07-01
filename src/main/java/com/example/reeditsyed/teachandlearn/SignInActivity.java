@@ -9,7 +9,6 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -33,7 +32,6 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
@@ -141,7 +139,6 @@ public class SignInActivity extends AppCompatActivity
                             // If sign in fails, display a message to the user.
                             Toast.makeText(SignInActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI(null);
                         }
 
                         // ...
@@ -227,9 +224,11 @@ public class SignInActivity extends AppCompatActivity
     }
 
     private void updateUI(FirebaseUser user){
-        this.name.setText(user.getDisplayName());
-        this.email.setText(user.getEmail());
-        Glide.with(this).load(user.getPhotoUrl().toString()).into(profPic);
+        if (user != null) {
+            this.name.setText(user.getDisplayName());
+            this.email.setText(user.getEmail());
+            Glide.with(this).load(user.getPhotoUrl().toString()).into(profPic);
+        }
     }
 
     @Override
