@@ -60,6 +60,7 @@ public class SignInActivity extends AppCompatActivity
         setContentView(R.layout.google_signin_screen);
 
         subject = "";
+        user = "";
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -96,6 +97,7 @@ public class SignInActivity extends AppCompatActivity
         // Configure sign-in to request the user's ID, email address, and basic
         // profile. ID and basic profile are included in DEFAULT_SIGN_IN.
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
 
@@ -238,7 +240,15 @@ public class SignInActivity extends AppCompatActivity
         // Result returned from launching the Intent from GoogleSignInApi.getSignInIntent(...);
         if (requestCode == REQ_CODE) {
             GoogleSignInResult result = Auth.GoogleSignInApi.getSignInResultFromIntent(data);
-            handleResult(result);
+            if (result.isSuccess()) {
+                // Google Sign In was successful, authenticate with Firebase
+                GoogleSignInAccount account = result.getSignInAccount();
+                firebaseAuthWithGoogle(account);
+                handleResult(result);
+            } else {
+                // Google Sign In failed, update UI appropriately
+                // ...
+            }
         }
     }
 
