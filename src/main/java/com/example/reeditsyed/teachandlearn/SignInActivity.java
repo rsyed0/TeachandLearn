@@ -5,15 +5,18 @@ import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
+import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,7 +50,7 @@ public class SignInActivity extends AppCompatActivity
     private Button signOut,tutor,student;
     private TextView name,email;
     private boolean isTutor;
-    private String subject,user;
+    private String subject,user,uid;
     private ImageView profPic;
     private GoogleApiClient googleApiClient;
     private FirebaseAuth mAuth;
@@ -61,11 +64,11 @@ public class SignInActivity extends AppCompatActivity
 
         subject = "";
         user = "";
+        uid = "";
 
         mAuth = FirebaseAuth.getInstance();
 
         profSection = (LinearLayout) findViewById(R.id.prof_section);
-        profSection.setVisibility(View.GONE);
 
         signOut = (Button) findViewById(R.id.bn_logout);
         signOut.setOnClickListener(this);
@@ -110,6 +113,16 @@ public class SignInActivity extends AppCompatActivity
 
         signIn();
 
+    }
+
+    public void openTutorProfileInfoScreen(View view){
+        isTutor = true;
+        setContentView(R.layout.profile_info_screen);
+    }
+
+    public void openStudentProfileInfoScreen(View view){
+        isTutor = false;
+        setContentView(R.layout.profile_info_screen);
     }
 
     @Override
@@ -159,14 +172,20 @@ public class SignInActivity extends AppCompatActivity
         else if (((RadioButton)findViewById(R.id.spanish)).isChecked()) subject = "Spanish";
         else if (((RadioButton)findViewById(R.id.french)).isChecked()) subject = "French";
         else if (((RadioButton)findViewById(R.id.english)).isChecked()) subject = "English";
-        else Toast.makeText(this,"No option selected",Toast.LENGTH_LONG).show();
+        else{
+            Toast.makeText(this,"No option selected",Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        ScrollView sView = new ScrollView(this);
+        sView.addView(new SignInActivity.OfferView(this));
 
         if (isTutor) {
-            firebase.child(subject).child(user).setValue("Tutor");
-            setContentView(new SignInActivity.OfferView(this));
-        }else{
-            firebase.child(subject).child(user).setValue("Student");
-            setContentView(new SignInActivity.OfferView(this));
+            firebase.child(subject).child(user).push().setValue("Tutor");
+            setContentView(sView);
+        }else if (!isTutor){
+            firebase.child(subject).child(user).push().setValue("Student");
+            setContentView(sView);
         }
     }
 
@@ -189,6 +208,20 @@ public class SignInActivity extends AppCompatActivity
         });
     }
 
+    public void addInfoToProfile(View view){
+
+        String address = ((EditText)findViewById(R.id.address)).getText().toString()+", "+
+                ((EditText)findViewById(R.id.citystate)).getText().toString()+", "+
+                ((EditText)findViewById(R.id.zipcode)).getText().toString();
+        String phone = ((EditText)findViewById(R.id.phone)).getText().toString();
+
+        firebase.child("user_profiles").child(uid).child("address: ").push().setValue(address);
+        firebase.child("user_profiles").child(uid).child("phone: ").push().setValue(phone);
+
+        openSubjectScreen(view);
+
+    }
+
     private void handleResult(GoogleSignInResult result){
 
         if (result.isSuccess()){
@@ -204,9 +237,11 @@ public class SignInActivity extends AppCompatActivity
                 Toast.makeText(this,"Couldn't retrieve account information.",Toast.LENGTH_LONG).show();
             }
 
-            String uid = account.getId();
-            firebase.child("user_profiles").child(uid).child("name: ").setValue(name);
-            firebase.child("user_profiles").child(uid).child("email: ").setValue(email);
+            uid = account.getServerAuthCode();
+
+            firebase.child("user_profiles").child(user).push().child("name: ").push().setValue(name);
+            firebase.child("user_profiles").child(user).child("email: ").push().setValue(email);
+            firebase.child("user_profiles").child(user).child("profPic: ").push().setValue(img_url);
 
             this.name.setText(name);
             this.email.setText(email);
@@ -252,6 +287,24 @@ public class SignInActivity extends AppCompatActivity
         }
     }
 
+    class ProfileView extends View{
+
+        private String name,img_url,email;
+
+        public ProfileView(final Context context,String name){
+            super(context);
+            this.name = name;
+        }
+
+        @Override
+        public void onDraw(Canvas canvas){
+
+
+
+        }
+
+    }
+
     class OfferView extends View{
 
         private List<String> users;
@@ -259,14 +312,15 @@ public class SignInActivity extends AppCompatActivity
 
         public OfferView(final Context context){
             super(context);
-            users = new ArrayList<String>();
-            tutors = new ArrayList<Boolean>();
+            users = new ArrayList<>();
+            tutors = new ArrayList<>();
 
             // read all offers in the subject, print on screen w/ drawText()
-            firebase.child(subject).addValueEventListener(new ValueEventListener() {
+            firebase.child(subject).addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
-                    for (DataSnapshot child:snapshot.getChildren()) {
+                    Log.i("Info",snapshot.hasChildren()+"");
+                    for (DataSnapshot child:snapshot.getChildren()) { // no values are being assigned to users
                         users.add(child.getKey());
                         tutors.add(child.getValue().equals("Tutor"));
                     }
@@ -278,25 +332,46 @@ public class SignInActivity extends AppCompatActivity
             });
         }
 
-        public void onDraw(Canvas g){
-            Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            /*paint.setStyle(Paint.Style.FILL_AND_STROKE);
+        @Override
+        public void onDraw(Canvas canvas){
+            Paint paint = new Paint();
             paint.setColor(Color.WHITE);
-            g.drawRect(0,0,getWidth(),getHeight(),paint);*/
+            paint.setStyle(Paint.Style.FILL);
+            canvas.drawPaint(paint);
 
-            paint.setTypeface(Typeface.create("Arial",Typeface.ITALIC)); // set font using paint
-            paint.setTextSize(getHeight()/21);
-            paint.setStyle(Paint.Style.STROKE);
             paint.setColor(Color.BLACK);
+            paint.setTextSize(100);
+            canvas.drawText("Some Text", 10, 125, paint);
 
             int index = 0;
 
             // read all offers in the subject, print on screen w/ drawText()
             for (String user:users){
-                if (tutors.get(index) != isTutor) g.drawText(user,50,getHeight()/7,paint);
+                if (tutors.get(index) != isTutor)
+                    canvas.drawText(user,50,getHeight()/7,paint);
                 index++;
             }
+        }
 
+        @Override
+        public boolean onTouchEvent(MotionEvent e){
+            if (e.getAction() == MotionEvent.ACTION_UP) return true;
+
+            int optionChosen = (int)(e.getY()/7);
+            List<String> offers = new ArrayList<>();
+            int index = 0;
+
+            for (String user:users){
+                if (tutors.get(index) != isTutor)
+                    offers.add(user);
+                index++;
+                if (offers.size() == 7)
+                    break;
+            }
+
+
+
+            return true;
         }
 
     }

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_layout"
     android:layout_width="match_parent"
@@ -7,68 +7,64 @@
     android:orientation="vertical"
     android:weightSum="4">
 
+    <ImageView
+        android:id="@+id/prof_pic"
+        android:layout_width="90dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="48dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/title"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:orientation="horizontal"
+        android:layout_marginTop="39dp"
         android:id="@+id/prof_section"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="50dp">
+        android:orientation="vertical"
+        android:layout_below="@+id/prof_pic"
+        android:layout_centerHorizontal="true">
 
-        <ImageView
-            android:id="@+id/prof_pic"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:src="@drawable/title" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="28dp"
-            android:orientation="vertical"
-            android:layout_marginTop="20dp">
+            android:gravity="center"
+            android:text="Name Display Here"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Name Display Here"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:id="@+id/name"
-                android:gravity="center"/>
+        <TextView
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:text="Email Display Here"
+            android:textSize="12sp"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Email Display Here"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:id="@+id/email"
-                android:layout_marginTop="10dp"
-                android:gravity="center"/>
+        <Button
+            android:id="@+id/bn_logout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Logout from google" />
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Logout from google"
-                android:id="@+id/bn_logout"/>
+        <Button
+            android:id="@+id/bn_tutor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="openTutorProfileInfoScreen"
+            android:text="Add tutor subject" />
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/bn_tutor"
-                android:text="Add tutor subject"/>
-
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/bn_student"
-                android:onClick="openSubjectScreen"
-                android:text="Add student subject"/>
-
-        </LinearLayout>
+        <Button
+            android:id="@+id/bn_student"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:onClick="openStudentProfileInfoScreen"
+            android:text="Add student subject" />
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
